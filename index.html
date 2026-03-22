@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ANVY365 — Bot de IA que Gera Dinheiro Automaticamente</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0a;
+  --gold:#C8A60A;
+  --green:#00FF88;
+  --orange:#FF6B00;
+  --white:#f0f0f0;
+  --card-bg:#151920;
+  --font:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:var(--font);line-height:1.6;overflow-x:hidden}
+
+/* Urgency bar */
+.urgency-bar{
+  background:linear-gradient(90deg,#3a0a0a,#6b1111,#3a0a0a);
+  padding:10px 12px;
+  text-align:center;
+  font-size:12px;
+  font-weight:600;
+  position:sticky;top:0;z-index:100;
+  border-bottom:1px solid #8b2020;
+  animation:urgencyGlow 2s ease-in-out infinite;
+}
+@keyframes urgencyGlow{
+  0%,100%{box-shadow:0 2px 20px rgba(200,30,30,0.3)}
+  50%{box-shadow:0 2px 30px rgba(200,30,30,0.6)}
+}
+.urgency-bar span{color:#ff4444;margin-right:4px}
+.countdown{color:var(--gold);font-family:'Courier New',monospace;font-size:14px;font-weight:700}
+
+/* Container */
+.container{max-width:800px;margin:0 auto;padding:0 16px}
+
+/* Hero */
+.hero{padding:28px 0 16px;text-align:center}
+.hero h1{
+  font-size:clamp(20px,4.5vw,34px);
+  font-weight:800;
+  line-height:1.2;
+  margin-bottom:10px;
+  background:linear-gradient(135deg,var(--white),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero .subtitle{
+  font-size:clamp(13px,2.2vw,16px);
+  color:#ccc;
+  max-width:500px;
+  margin:0 auto;
+  line-height:1.4;
+}
+
+/* Video */
+.video-section{
+  max-width:750px;margin:16px auto 12px;
+}
+
+/* Balance counter */
+.balance-box{
+  max-width:500px;margin:12px auto 0;
+  background:linear-gradient(145deg,#0d1117,#111820);
+  border:1px solid #1a3a1a;
+  border-radius:8px;
+  padding:14px 16px;
+  text-align:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.balance-label{font-size:12px;color:#aaa}
+.balance-value{
+  font-family:'Courier New',monospace;
+  font-size:clamp(24px,5vw,32px);
+  font-weight:700;
+  color:var(--green);
+  text-shadow:0 0 20px rgba(0,255,136,0.3);
+}
+.balance-value .currency{font-size:0.5em;color:#aaa;margin-left:4px}
+
+/* Comments */
+.comment-box{
+  max-width:500px;margin:14px auto 0;
+  min-height:48px;
+  display:flex;align-items:center;justify-content:center;
+}
+.comment-inner{
+  background:var(--card-bg);
+  border:1px solid #222;
+  border-radius:8px;
+  padding:10px 16px;
+  font-size:13px;
+  line-height:1.4;
+  opacity:0;
+  transition:opacity 0.8s ease;
+  text-align:center;
+}
+.comment-inner.visible{opacity:1}
+.comment-name{color:var(--gold);font-weight:700;margin-right:6px}
+.comment-text{color:#ccc}
+
+</style>
+</head>
+<body>
+
+<!-- URGENCY BAR -->
+<div class="urgency-bar">
+  <span>⚠️</span> Restam menos de 5 vagas em Angola. Acesso expira em: <span class="countdown" id="topCountdown">15:00</span>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <h1>O ANVY365 Seleccionou o Teu Dispositivo.</h1>
+    <p class="subtitle">Um bot de IA está pronto para gerar dinheiro para ti — automaticamente, 24h por dia. A tua vaga fecha em breve.</p>
+  </div>
+</section>
+
+<!-- VIDEO (Vturb) -->
+<div class="container">
+  <div class="video-section">
+    <vturb-smartplayer id="vid-69c06dc358c18f17b0aa2612" style="display:block;margin:0 auto;width:100%;"></vturb-smartplayer>
+    <script type="text/javascript">
+    var s=document.createElement("script");
+    s.src="https://scripts.converteai.net/5b6e7aa6-946a-4ac0-8394-9c924b02807e/players/69c06dc358c18f17b0aa2612/v4/player.js",s.async=!0,document.head.appendChild(s);
+    </script>
+  </div>
+</div>
+
+<!-- BALANCE COUNTER -->
+<div class="container">
+  <div class="balance-box">
+    <div class="balance-label">💰 Saldo acumulado:</div>
+    <div class="balance-value"><span id="balanceValue">4.500</span><span class="currency">Kz</span></div>
+  </div>
+</div>
+
+<!-- COMMENTS -->
+<div class="container">
+  <div class="comment-box" id="commentBox">
+    <div class="comment-inner" id="commentInner">
+      <span class="comment-name" id="commentName"></span>
+      <span class="comment-text" id="commentText"></span>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// === COUNTDOWN TIMER (15 minutes, resets at 0) ===
+(function(){
+  let totalSeconds = 15 * 60;
+  const topEl = document.getElementById('topCountdown');
+
+  function updateDisplay(){
+    const m = Math.floor(totalSeconds / 60);
+    const s = totalSeconds % 60;
+    topEl.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  }
+
+  updateDisplay();
+  setInterval(function(){
+    totalSeconds--;
+    if(totalSeconds < 0) totalSeconds = 15 * 60;
+    updateDisplay();
+  }, 1000);
+})();
+
+// === BALANCE COUNTER (organic growth — ~65.000 Kz em 8 min) ===
+(function(){
+  let balance = 4500;
+  const el = document.getElementById('balanceValue');
+  // Target: ~65.000 Kz em 8 min (480s). Need ~60.500 Kz gain.
+  // Average ~126 Kz/s. Ticks every 1-3s with jumps of 100-700 Kz.
+
+  function formatKz(val){
+    return val.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  el.textContent = formatKz(balance);
+
+  function tick(){
+    // Random increment between 100 and 700 Kz
+    var increment = 100 + Math.floor(Math.random() * 600);
+    balance += increment;
+    el.textContent = formatKz(balance);
+    // Random delay between 1s and 3s
+    var delay = 1000 + Math.floor(Math.random() * 2000);
+    setTimeout(tick, delay);
+  }
+  setTimeout(tick, 2000);
+})();
+
+// === ROTATING COMMENTS (fade in/out, 30s cycle) ===
+(function(){
+  var comments = [
+    {name:'Mário K. — Luanda', text:'Isto é real?? Activei ontem e já recebi 38.000 Kz na conta. Estou em choque total 🔥'},
+    {name:'Telma F. — Benguela', text:'O meu marido não acreditava até ver o saldo. Agora ele também quer activar o dele 😂'},
+    {name:'José M. — Huambo', text:'Já tentei de tudo na internet. Isto é a primeira coisa que realmente funciona. Obrigado ANVY365!'},
+    {name:'Cláudia R. — Cabinda', text:'Recebi os primeiros 15.000 Kz em menos de 3 horas. Sem fazer nada. Incrível.'},
+    {name:'Nelson A. — Malanje', text:'Não percebo como funciona mas o dinheiro entra. É só isso que me interessa 💰'},
+    {name:'Beatriz S. — Luanda', text:'Mostrei à minha irmã e ela ficou maluca. Já activámos as duas. Melhor decisão de sempre.'},
+    {name:'Fernando D. — Viana', text:'Acordei com 47.000 Kz que não tinha quando fui dormir. Este bot é de outro mundo.'},
+    {name:'Rosa T. — Lubango', text:'Eu duvidei muito antes de activar. Agora arrependo-me de não ter feito mais cedo.'},
+    {name:'Paulo G. — Benguela', text:'Com o que ganhei esta semana já paguei a renda e sobrou. Primeira vez em meses.'},
+    {name:'Márcia L. — Luanda', text:'Finalmente algo que funciona para nós em Angola. Sem complicações, sem mentiras. Recomendo a 100%.'}
+  ];
+
+  var idx = 0;
+  var inner = document.getElementById('commentInner');
+  var nameEl = document.getElementById('commentName');
+  var textEl = document.getElementById('commentText');
+
+  function showComment(){
+    var c = comments[idx];
+    nameEl.textContent = c.name + ':';
+    textEl.textContent = c.text;
+    inner.classList.add('visible');
+
+    // fade out after 15s
+    setTimeout(function(){
+      inner.classList.remove('visible');
+    }, 15000);
+
+    idx = (idx + 1) % comments.length;
+  }
+
+  // first comment after 5s
+  setTimeout(function(){
+    showComment();
+    setInterval(showComment, 30000);
+  }, 5000);
+})();
+
+// === BACK REDIRECT ===
+(function(){
+  var pages = ['volta1.html','volta2.html','volta3.html','volta4.html'];
+  var key = 'anvy_back_count';
+  var count = parseInt(sessionStorage.getItem(key)||'0');
+
+  history.pushState(null,null,location.href);
+  window.addEventListener('popstate',function(){
+    if(count < pages.length){
+      sessionStorage.setItem(key, count+1);
+      location.href = pages[count];
+    } else {
+      history.pushState(null,null,location.href);
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DECISÃO FINAL — ANVY365</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0a;--gold:#C8A60A;--green:#00FF88;--orange:#FF6B00;--white:#f0f0f0;--font:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+body{background:var(--bg);color:var(--white);font-family:var(--font);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
+
+.alert-badge{
+  display:inline-block;
+  background:rgba(0,255,136,0.08);
+  border:1px solid rgba(0,255,136,0.2);
+  color:var(--green);
+  font-size:11px;
+  font-weight:700;
+  padding:5px 14px;
+  border-radius:20px;
+  margin-bottom:16px;
+}
+h1{
+  font-size:clamp(20px,4.5vw,30px);
+  font-weight:800;
+  line-height:1.25;
+  margin-bottom:10px;
+}
+.subtitle{font-size:clamp(13px,2.2vw,15px);color:#aaa;max-width:420px;margin:0 auto 20px;line-height:1.4}
+
+.price-box{
+  background:linear-gradient(145deg,#0d1117,#111820);
+  border:1px solid rgba(0,255,136,0.12);
+  border-radius:10px;
+  padding:18px 24px;
+  margin-bottom:18px;
+  max-width:340px;
+  width:100%;
+}
+.price-old{font-size:12px;color:#555;margin-bottom:2px}
+.price-old span{text-decoration:line-through;color:#777}
+.price-new-label{font-size:12px;color:var(--green);font-weight:600;margin-bottom:4px}
+.price-new{
+  font-size:clamp(36px,8vw,50px);
+  font-weight:900;
+  color:var(--green);
+  line-height:1;
+  text-shadow:0 0 25px rgba(0,255,136,0.15);
+}
+.price-new .kz{font-size:0.35em;color:#888;vertical-align:middle}
+.price-save{
+  display:inline-block;
+  background:rgba(0,255,136,0.1);
+  border:1px solid rgba(0,255,136,0.2);
+  color:var(--green);
+  font-size:10px;
+  font-weight:700;
+  padding:3px 10px;
+  border-radius:12px;
+  margin-top:8px;
+}
+.price-note{font-size:10px;color:#555;margin-top:6px}
+
+.final-msg{
+  font-size:12px;
+  color:#666;
+  max-width:360px;
+  margin:0 auto 16px;
+  line-height:1.4;
+  font-style:italic;
+}
+
+.cta-btn{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--green),#00cc6a);
+  color:#000;
+  font-size:13px;
+  font-weight:800;
+  padding:12px 28px;
+  border:none;border-radius:8px;
+  cursor:pointer;
+  text-decoration:none;
+  box-shadow:0 3px 20px rgba(0,255,136,0.3);
+  animation:pulse 2s ease-in-out infinite;
+  transition:transform 0.2s;
+}
+.cta-btn:hover{transform:scale(1.02)}
+@keyframes pulse{
+  0%,100%{box-shadow:0 3px 20px rgba(0,255,136,0.3)}
+  50%{box-shadow:0 3px 35px rgba(0,255,136,0.5),0 0 50px rgba(0,255,136,0.15)}
+}
+.cta-sub{font-size:10px;color:#555;margin-top:8px}
+.timer{font-family:'Courier New',monospace;color:#ff3333;font-weight:700;font-size:14px;margin-bottom:14px;animation:timerBlink 0.8s ease-in-out infinite}
+@keyframes timerBlink{0%,100%{opacity:1}50%{opacity:0.3}}
+</style>
+</head>
+<body>
+
+<div class="alert-badge">🔓 OVERRIDE DO SISTEMA ACTIVADO</div>
+
+<h1>Último preço. Última vez.</h1>
+<p class="subtitle">Forcei o sistema ao limite absoluto. Este é o menor valor a que alguma vez vais ver o ANVY365. Depois disto, a vaga fecha para sempre.</p>
+
+<div class="timer">Vaga fecha em: <span id="timer">01:00</span></div>
+
+<div class="price-box">
+  <div class="price-old">De: <span>8.000 Kz</span></div>
+  <div class="price-new-label">Override do sistema — preço final:</div>
+  <div class="price-new">2.800 <span class="kz">Kz</span></div>
+  <div class="price-save">Poupas 5.200 Kz — 65% OFF</div>
+  <div class="price-note">Pagamento único · Acesso vitalício</div>
+</div>
+
+<div class="final-msg">"Se este valor ainda não te convence, eu não consigo fazer mais nada por ti. A decisão é tua." — ANVY365</div>
+
+<a href="https://pay.kuenha.com/fbed7d24-034d-4d37-9466-6d6d5530e501" class="cta-btn">⚡ ACTIVAR POR 2.800 Kz — ÚLTIMA CHANCE</a>
+<div class="cta-sub">🔒 Pagamento seguro · Garantia 60 dias</div>
+
+<script>
+(function(){
+  var t=60;var el=document.getElementById('timer');
+  setInterval(function(){
+    t--;if(t<0)t=60;
+    var m=Math.floor(t/60),s=t%60;
+    el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  },1000);
+})();
+</script>
+
+</body>
+</html>
