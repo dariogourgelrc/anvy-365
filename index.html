@@ -129,6 +129,83 @@ body{background:var(--bg);color:var(--white);font-family:var(--font);line-height
 .comment-name{color:var(--gold);font-weight:700;margin-right:6px}
 .comment-text{color:#ccc}
 
+/* Popup CTA */
+.popup-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.85);
+  z-index:200;
+  display:none;
+  align-items:center;justify-content:center;
+  padding:16px;
+  animation:fadeOverlay 0.4s ease;
+}
+.popup-overlay.active{display:flex}
+@keyframes fadeOverlay{from{opacity:0}to{opacity:1}}
+.popup{
+  background:linear-gradient(145deg,#111318,#151920);
+  border:1px solid #222;
+  border-radius:12px;
+  padding:22px 20px;
+  max-width:340px;
+  width:100%;
+  text-align:center;
+  position:relative;
+  animation:popIn 0.3s ease;
+}
+@keyframes popIn{from{transform:scale(0.9);opacity:0}to{transform:scale(1);opacity:1}}
+.popup-close{
+  position:absolute;top:8px;right:12px;
+  background:none;border:none;color:#555;
+  font-size:18px;cursor:pointer;
+  line-height:1;
+}
+.popup-close:hover{color:#aaa}
+.popup-badge{
+  display:inline-block;
+  background:rgba(255,60,60,0.12);
+  border:1px solid rgba(255,60,60,0.25);
+  color:#ff4444;
+  font-size:10px;
+  font-weight:700;
+  padding:4px 12px;
+  border-radius:16px;
+  margin-bottom:12px;
+  animation:badgeBlink 1.2s ease-in-out infinite;
+}
+@keyframes badgeBlink{0%,100%{opacity:1}50%{opacity:0.6}}
+.popup h2{font-size:18px;font-weight:800;margin-bottom:6px;line-height:1.2}
+.popup .popup-sub{font-size:12px;color:#999;margin-bottom:14px;line-height:1.4}
+.popup .popup-price-old{font-size:11px;color:#555}
+.popup .popup-price-old span{text-decoration:line-through;color:#777}
+.popup .popup-price-label{font-size:11px;color:var(--gold);font-weight:600;margin:2px 0}
+.popup .popup-price{
+  font-size:clamp(32px,8vw,42px);
+  font-weight:900;
+  color:var(--gold);
+  line-height:1;
+  margin-bottom:4px;
+}
+.popup .popup-price .kz{font-size:0.35em;color:#888;vertical-align:middle}
+.popup .popup-price-note{font-size:9px;color:#555;margin-bottom:14px}
+.popup .popup-btn{
+  display:inline-block;
+  background:linear-gradient(135deg,#FF6B00,#FF8C00);
+  color:white;
+  font-size:12px;
+  font-weight:700;
+  padding:10px 24px;
+  border:none;border-radius:8px;
+  cursor:pointer;
+  text-decoration:none;
+  box-shadow:0 3px 16px rgba(255,107,0,0.35);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{box-shadow:0 3px 16px rgba(255,107,0,0.35)}
+  50%{box-shadow:0 3px 28px rgba(255,107,0,0.6),0 0 40px rgba(255,107,0,0.15)}
+}
+.popup .popup-cta-sub{font-size:9px;color:#555;margin-top:8px}
+
 </style>
 </head>
 <body>
@@ -178,6 +255,22 @@ body{background:var(--bg);color:var(--white);font-family:var(--font);line-height
   </div>
 </div>
 
+
+<!-- POPUP CTA -->
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup">
+    <button class="popup-close" id="popupClose">&times;</button>
+    <div class="popup-badge">🔴 ÚLTIMA VAGA DISPONÍVEL</div>
+    <h2>A tua vaga está a fechar.</h2>
+    <p class="popup-sub">O sistema detectou que esta é a última vaga activa em Angola. Preço reduzido aplicado automaticamente.</p>
+    <div class="popup-price-old">De: <span>8.000 Kz</span></div>
+    <div class="popup-price-label">Última vaga — preço final:</div>
+    <div class="popup-price">5.000 <span class="kz">Kz</span></div>
+    <div class="popup-price-note">Pagamento único · Acesso vitalício</div>
+    <a href="conta.html" class="popup-btn">⚡ ACTIVAR POR 5.000 Kz</a>
+    <div class="popup-cta-sub">🔒 Pagamento seguro · Garantia 60 dias</div>
+  </div>
+</div>
 
 <script>
 // === COUNTDOWN TIMER (15 minutes, resets at 0) ===
@@ -263,6 +356,24 @@ body{background:var(--bg);color:var(--white);font-family:var(--font);line-height
     showComment();
     setInterval(showComment, 30000);
   }, 5000);
+})();
+
+// === POPUP CTA (appears after 8 min) ===
+(function(){
+  var overlay = document.getElementById('popupOverlay');
+  var closeBtn = document.getElementById('popupClose');
+
+  setTimeout(function(){
+    overlay.classList.add('active');
+  }, 340000);
+
+  closeBtn.addEventListener('click',function(){
+    overlay.classList.remove('active');
+  });
+
+  overlay.addEventListener('click',function(e){
+    if(e.target === overlay) overlay.classList.remove('active');
+  });
 })();
 
 // === BACK REDIRECT ===
