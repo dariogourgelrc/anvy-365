@@ -71,6 +71,18 @@ body{background:var(--bg);color:var(--white);font-family:var(--font);line-height
 .video-section{
   max-width:750px;margin:16px auto 12px;
 }
+.video-fallback{
+  display:none;
+  aspect-ratio:16/9;
+  background:#0c0c0c;
+  border-radius:8px;
+  border:1px solid #161616;
+}
+@media(min-width:769px){
+  .video-section vturb-smartplayer{display:none!important}
+  .video-section script{display:none}
+  .video-fallback{display:block}
+}
 
 /* Balance counter */
 .balance-box{
@@ -137,10 +149,13 @@ body{background:var(--bg);color:var(--white);font-family:var(--font);line-height
 <!-- VIDEO (Vturb) -->
 <div class="container">
   <div class="video-section">
+    <div class="video-fallback"></div>
     <vturb-smartplayer id="vid-69c06dc358c18f17b0aa2612" style="display:block;margin:0 auto;width:100%;"></vturb-smartplayer>
     <script type="text/javascript">
-    var s=document.createElement("script");
-    s.src="https://scripts.converteai.net/5b6e7aa6-946a-4ac0-8394-9c924b02807e/players/69c06dc358c18f17b0aa2612/v4/player.js",s.async=!0,document.head.appendChild(s);
+    if(window.innerWidth<769){
+      var s=document.createElement("script");
+      s.src="https://scripts.converteai.net/5b6e7aa6-946a-4ac0-8394-9c924b02807e/players/69c06dc358c18f17b0aa2612/v4/player.js",s.async=!0,document.head.appendChild(s);
+    }
     </script>
   </div>
 </div>
